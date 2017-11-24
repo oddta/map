@@ -41,9 +41,9 @@
     ws.onmessage = function(ev){
       var json = JSON.parse(ev.data);
       var pos = {lat: json.lat, lng: json.lng};
-      var game = json.game;
+      var event = json.event;
       var amount = json.amount;
-      addMarker(pos,map,game,amount);
+      addMarker(pos,map,event,amount);
     };
 
     ws.onclose = function(ev){
@@ -89,27 +89,27 @@ function initMap() {
 var total = 0;
 var Event1 = 0, Event2 = 0, Event3 = 0, Event4 = 0;
 
-function addMarker(location, map,game,amount) {
+function addMarker(location, map,event,amount) {
   icon = red;
-  gameInitial = '1';
-  if (game == "1") {
+  eventInitial = '1';
+  if (event == "1") {
       icon = red;
-      gameInitial = 'E1';
+      eventInitial = 'E1';
       Event1 = Event1 + parseInt(amount);
   }
-  if (game == "2") {
+  if (event == "2") {
       icon = green;
-      gameInitial = 'E2';
+      eventInitial = 'E2';
       Event2 = Event2 + parseInt(amount);
   } 
-  if (game == "3") {
+  if (event == "3") {
       icon = blue;
-      gameInitial = 'E3';
+      eventInitial = 'E3';
       Event3 = Event3 + parseInt(amount);
   }
-   if (game == "4") {
+   if (event == "4") {
       icon = blue;
-      gameInitial = 'E4';
+      eventInitial = 'E4';
       Event4 = Event4 + parseInt(amount);
   }
   
@@ -129,7 +129,7 @@ function addMarker(location, map,game,amount) {
   document.getElementById("mytext").innerHTML=tekst;
   var m = new google.maps.Marker({
     position: location,
-    label: gameInitial,
+    label: eventInitial,
     map: map,
     icon: icon,
     opacity: 1,
