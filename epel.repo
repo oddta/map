@@ -1,0 +1,8 @@
+[epel]
+name=Extra Packages for Enterprise Linux 7 x86_64
+baseurl=http://ftp.uninett.no/linux/epel/7/x86_64/
+enabled=1
+gpgcheck=0
+enablegroups=0
+metadata_expire=3600
+skip_if_unavailable=1

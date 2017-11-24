@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Event on Map</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+       #over_map { position: absolute; top: 100px; left: 100px; z-index: 99; }
+      table, th, td {
+          border: 0px solid black;
+          border-collapse: collapse;
+       } 
+         th, td {
+         padding: 5px;
+       }
+    </style>
+  </head>
+  <body>
+      <div id="map"></div>
+       <div id="over_map">
+              <h1>Totals</h1>
+              <span id="mytext"></span>
+          </div>
+    <script>
+    var mld = 0;
+    var map;
+
+    var ws = new WebSocket('ws://mapapp.mypro.192.168.99.100.nip.io/ws');
+
+    ws.onopen = function(){
+      //alert("connected");
+    };
+
+    ws.onmessage = function(ev){
+      var json = JSON.parse(ev.data);
+      var pos = {lat: json.lat, lng: json.lng};
+      var game = json.game;
+      var amount = json.amount;
+      addMarker(pos,map,game,amount);
+    };
+
+    ws.onclose = function(ev){
+      console.log("on close:" + ev); 
+  };
+
+  ws.onerror = function(ev){
+      console.log("on error:" + ev); 
+  };
+//  
+//  
+// 
+var marker = [];
+ var red, blue, yellow, green;
+
+function initMap() {
+    red =    new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FF0000");
+    green =  new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|00ff00");
+    orange = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff4500");
+    black =  new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|000000");
+    blue =   new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|0000FF");
+    brown =  new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|C85A17");
+    gold =   new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|D4A017");
+    yellow = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00");
+    white =  new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFFFF");
+    grey =   new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|808080")
+    map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 5,
+    center: {lat: 64.325, lng: 15.070}
+  });
+  hamar = {lat:60.83, lng:11.09};
+  //addMarker(hamar,map);
+}
+
+ var goldStar = {
+    path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z',
+    fillColor: 'yellow',
+    fillOpacity: 0.8,
+    scale: 1,
+    strokeColor: 'gold',
+    strokeWeight: 14
+  };
+var total = 0;
+var Lotto = 0, VikingLotto = 0, Sport = 0, Nabolaget =0, Keno = 0, Extra = 0, EuroJackpot = 0, Joker = 0, Flax = 0;
+
+function addMarker(location, map,game,amount) {
+  icon = red;
+  gameInitial = '1';
+  if (game == "1") {
+      icon = red;
+      gameInitial = 'E1';
+      Event1 = Event1 + parseInt(amount);
+  }
+  if (game == "2") {
+      icon = green;
+      gameInitial = 'E2';
+      Event2 = Event2 + parseInt(amount);
+  } 
+  if (game == "3") {
+      icon = blue;
+      gameInitial = 'E3';
+      Event3 = Event3 + parseInt(amount);
+  }
+   if (game == "4") {
+      icon = blue;
+      gameInitial = 'E4';
+      Event4 = Event4 + parseInt(amount);
+  }
+  
+  if ( amount > 1000) {
+     icon = goldStar;
+  }   
+  var y = parseInt(amount);
+  total = total + y;
+  var x = total.toString();
+  tekst = '<table style="width:30%">';
+  tekst = tekst + '<tr><td bgcolor="ff0000">Event 1</td><td>' + Event1.toString() + '</td></tr>';
+  tekst = tekst + '<tr><td bgcolor="00ff00">Event 2</td><td>' + Event2.toString() + '</td></tr>';
+  tekst = tekst + '<tr><td bgcolor="0000ff">Event 3</td><td>' + Event3.toString() + '</td></tr>';
+  tekst = tekst + '<tr><td bgcolor="ffff00">Event 4</td><td>' + Event4.toString() + '</td></tr>';
+  tekst = tekst + '<tr><td><b>Totalt</b></td><td><b>' + total.toString() + '</b></td></tr>';
+  tekst = tekst + '</table>'
+  document.getElementById("mytext").innerHTML=tekst;
+  var m = new google.maps.Marker({
+    position: location,
+    label: gameInitial,
+    map: map,
+    icon: icon,
+    opacity: 1,
+    opacities: [.95,.9,.85,.80,.75,.70,.65,.60,.55,.50,.45,.40,.35,.30,.25,.20,.15,.10,.05,0]
+  });
+  animateMarkers(m);
+}
+
+function animateMarkers(pin) {
+    var i;
+      if (pin.opacities.length > 0) {
+        pin.setOpacity(pin.opacities[0]);
+        pin.opacities.shift();
+        //console.log("pin.opacities.length" + pin.opacities.length);
+      } 
+      else {
+       pin.setMap(null)
+        //console.log("Animering ferdig");
+      }
+    return setTimeout(function() {
+      if (pin != null) { 
+         return animateMarkers(pin);
+      }
+    }, 200);
+    
+};
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?signed_in=true&callback=initMap"></script>
+  </body>
+</html>
