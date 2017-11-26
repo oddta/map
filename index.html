@@ -91,29 +91,24 @@ var Event1 = 0, Event2 = 0, Event3 = 0, Event4 = 0;
 
 function addMarker(location, map,event,amount) {
   icon = red;
-  eventInitial = '1';
-  if (event == "1") {
+  if (event == "Event1") {
       icon = red;
-      eventInitial = 'E1';
       Event1 = Event1 + parseInt(amount);
   }
-  if (event == "2") {
+  if (event == "Event2") {
       icon = green;
-      eventInitial = 'E2';
       Event2 = Event2 + parseInt(amount);
   } 
-  if (event == "3") {
+  if (event == "Event3") {
       icon = blue;
-      eventInitial = 'E3';
       Event3 = Event3 + parseInt(amount);
   }
-   if (event == "4") {
+   if (event == "Event4") {
       icon = blue;
-      eventInitial = 'E4';
       Event4 = Event4 + parseInt(amount);
   }
   
-  if ( amount > 1000) {
+  if ( parseInt(amount) > 1000) {
      icon = goldStar;
   }   
   var y = parseInt(amount);
